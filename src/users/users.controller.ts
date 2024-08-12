@@ -1,4 +1,14 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Delete, Get } from '@nestjs/common';
 
 @Controller('users')
-export class UsersController {}
+export class UsersController {
+    @Get()
+    getUsers() {
+        return 'hello world';
+    }
+
+    @Delete()
+    deleteUser(){
+        
+    }
+}
