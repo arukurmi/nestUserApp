@@ -1,32 +1,50 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { log } from 'console';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-    @Get()
-    getUsers() {
-        return [];
-    }
+  constructor(private readonly usersService: UsersService) {}
 
-    @Get(':id')
-    getUserInfo(@Query('id') id: string) {
-        console.log("alkrhasdlfhjsdkl");
-        console.log(id);
-        return {id};
-    }
+  @Get()
+   getUsers() {
+    return this.usersService.findUsers();
+  }
 
-    @Patch(':id')
-    updateUser(@Param('id') id: string, @Body() updateUser: {}){
-        return id;
-    }
+  @Get(':id')
+   getUserInfo(@Param('id') id: string) {
+    return this.usersService.findOne(+id);
+  }
 
-    @Post()
-    createUser(@Body() user: {}){
-        return user;
-    }
+  @Patch(':id')
+   updateUser(@Param('id') id: string, @Body() updateUser: {}) {
+    const user = this.usersService.updateUser(+id, updateUser);
+    return user;
+  }
 
-    @Delete(':id')
-    deleteUser(@Param('id') id: string){
-        return id;
-    }
+  @Post()
+   createUser(
+    @Body()
+    user: {
+      name: string;
+      email: string;
+      role: 'INTERN' | 'ENGINEER' | 'ADMIN';
+    },
+  ) {
+    const newUser = this.usersService.createUser(user);
+    return newUser;
+  }
+
+  @Delete(':id')
+   deleteUser(@Param('id') id: string) {
+    return this.usersService.deleteUser(+id);
+  }
 }
